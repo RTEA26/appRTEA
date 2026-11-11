@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>R-TEA | Gestión Educativa y Aula Reducida</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js para la gráfica de Radar -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans / Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Quicksand"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              orange: '#FF5C38',
+              orangeLight: '#FFF0ED',
+              blue: '#0284C7',
+              blueLight: '#E0F2FE',
+              purple: '#7C3AED',
+              purpleLight: '#F3E8FF',
+              green: '#10B981',
+              greenLight: '#D1FAE5',
+              yellow: '#F59E0B',
+              dark: '#0F172A',
+              card: '#FFFFFF',
+              surface: '#F8FAFC'
+            }
+          },
+          boxShadow: {
+            'premium': '0 20px 40px -15px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.03)',
+            'float': '0 25px 50px -12px rgba(15, 23, 42, 0.18)',
+            'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.03)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos Premium & Glassmorphism */
+    body {
+      background: radial-gradient(circle at 10% 20%, #F1F5F9 0%, #F8FAFC 90%);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .scale-tap {
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .scale-tap:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased font-sans overflow-hidden">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="glass-nav sticky top-0 z-40 border-b border-slate-200/70 px-4 sm:px-8 py-2.5 flex items-center justify-between shadow-sm">
+    <div class="flex items-center space-x-3">
+      <!-- Logo Oficial R-TEA -->
+      <div class="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl overflow-hidden shadow-md border-2 border-white flex-shrink-0 bg-white">
+        <img src="rtea_logo.jpg" alt="Logo R-TEA" class="h-full w-full object-cover">
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-xl sm:text-2xl font-extrabold font-display tracking-tight text-slate-900 flex items-center">
+            <span class="text-brand-orange">R-</span><span class="text-brand-blue">TEA</span>
+          </h1>
+          <span class="px-2 py-0.5 text-[11px] font-bold rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">
+            PRO AULA
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 font-medium">Seguimiento Pedagógico Confidencial</p>
+      </div>
+    </div>
+
+    <!-- Acciones Rápidas Header -->
+    <div class="flex items-center space-x-2">
+      <div class="hidden sm:flex items-center bg-slate-100/90 rounded-full px-3 py-1 text-xs font-semibold text-slate-600 border border-slate-200">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></span>
+        Privacidad Total (100% Local)
+      </div>
+      <button onclick="openHelpModal()" class="scale-tap p-2 rounded-2xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition" title="Guía y Ayuda">
+        <i data-lucide="help-circle" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN VIEW CONTAINER ================= -->
+  <main id="mainContainer" class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-6 pb-28 max-w-7xl mx-auto w-full">
+    <!-- Aquí se inyectan dinámicamente las vistas: Alumnos, Calendario, Recursos -->
+  </main>
+
+  <!-- ================= BOTTOM NAVIGATION BAR (FLOATING DOCK) ================= -->
+  <nav class="fixed bottom-4 inset-x-0 mx-auto w-[92%] sm:w-fit z-40 max-w-lg">
+    <div class="glass-nav rounded-3xl p-1.5 shadow-float border border-white/80 flex items-center justify-around sm:gap-2">
+      <!-- Tab: Alumnos (Logo e Icono Infantil Amable) -->
+      <button onclick="switchTab('alumnos')" id="tab-btn-alumnos" class="scale-tap flex-1 sm:flex-initial flex items-center justify-center space-x-2 px-5 py-2.5 rounded-2xl font-semibold text-xs transition-all duration-200 bg-brand-orange text-white shadow-md">
+        <span class="text-base leading-none">🎒</span>
+        <span>Alumnos</span>
+      </button>
+
+      <!-- Tab: Calendario / Diario -->
+      <button onclick="switchTab('calendario')" id="tab-btn-calendario" class="scale-tap flex-1 sm:flex-initial flex items-center justify-center space-x-2 px-5 py-2.5 rounded-2xl font-semibold text-xs transition-all duration-200 text-slate-600 hover:text-slate-900">
+        <span class="text-base leading-none">🗓️</span>
+        <span>Diario Aula</span>
+      </button>
+
+      <!-- Tab: Recursos -->
+      <button onclick="switchTab('recursos')" id="tab-btn-recursos" class="scale-tap flex-1 sm:flex-initial flex items-center justify-center space-x-2 px-5 py-2.5 rounded-2xl font-semibold text-xs transition-all duration-200 text-slate-600 hover:text-slate-900">
+        <span class="text-base leading-none">🧩</span>
+        <span>Recursos</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================= MODALS & OVERLAYS ================= -->
+  <!-- Modal: Crear/Editar Alumno -->
+  <div id="modalStudent" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-float border border-slate-100 transform transition-all">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+        <h3 id="modalStudentTitle" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-5 h-5 text-brand-orange"></i>
+          <span>Nuevo Alumno (Perfil Anónimo)</span>
+        </h3>
+        <button onclick="closeStudentModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-full">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+            Alias / Apodo Personalizado (Manual):
+          </label>
+          <input type="text" id="studentAliasInput" placeholder="Ej: Explorador Azul, Alumno B-12, Leo P." 
+            class="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-brand-orange focus:bg-white transition text-sm">
+          <p class="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            Tú decides el nombre ficticio para máxima confidencialidad.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Color / Distintivo Visual:</label>
+          <div class="grid grid-cols-5 gap-2" id="colorPickerContainer">
+            <!-- Paleta de colores seleccionables -->
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Notas Iniciales / Diagnóstico Anónimo:</label>
+          <textarea id="studentNotesInput" rows="2" placeholder="Ej: Nivel 2 de soporte, gran interés en dinosaurios, hipersensibilidad auditiva..." 
+            class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:ring-2 focus:ring-brand-orange focus:bg-white"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-3 pt-6 border-t border-slate-100 mt-6">
+        <button onclick="closeStudentModal()" class="px-5 py-2.5 rounded-2xl font-bold text-xs text-slate-500 hover:bg-slate-100 transition">
+          Cancelar
+        </button>
+        <button onclick="saveStudent()" class="px-6 py-2.5 rounded-2xl font-bold text-xs bg-brand-orange text-white shadow-md hover:bg-orange-600 transition scale-tap">
+          Guardar Alumno
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Subir Documento a la Carpeta del Alumno -->
+  <div id="modalUploadDoc" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-float border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="file-up" class="w-5 h-5 text-brand-blue"></i>
+          <span>Subir Documento (Máx. 3 por alumno)</span>
+        </h3>
+        <button onclick="closeUploadDocModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre o Tipo de Documento:</label>
+          <input type="text" id="docNameInput" placeholder="Ej: Dictamen Psicopedagógico 2026, Adaptación Curricular" 
+            class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs focus:ring-2 focus:ring-brand-blue">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Seleccionar Archivo (PDF, Word, Imagen):</label>
+          <input type="file" id="docFileInput" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" 
+            class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100">
+        </div>
+      </div>
+      <div class="flex justify-end space-x-3 pt-5 border-t border-slate-100 mt-5">
+        <button onclick="closeUploadDocModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500">Cancelar</button>
+        <button onclick="confirmUploadDoc()" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-blue text-white shadow hover:bg-sky-700">Subir Documento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Crear/Editar Ítem de Evaluación -->
+  <div id="modalEvaluationItem" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-float border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="modalItemTitle" class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i>
+          <span>Ítem de Evaluación Adaptativo</span>
+        </h3>
+        <button onclick="closeItemModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="space-y-4 pt-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Título del Ítem / Objetivo:</label>
+          <input type="text" id="itemTitleInput" placeholder="Ej: Regulación en transiciones de actividad" 
+            class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Área o Dimensión:</label>
+          <select id="itemCategoryInput" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-semibold focus:ring-2 focus:ring-amber-500">
+            <option value="Comunicación">Comunicación y Lenguaje</option>
+            <option value="Sensorial">Regulación Sensorial y Emocional</option>
+            <option value="Social">Interacción y Habilidades Sociales</option>
+            <option value="Autonomía">Autonomía y Rutinas TEACCH</option>
+            <option value="Cognición">Flexibilidad y Atención Sostenida</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-3 pt-5 border-t border-slate-100 mt-5">
+        <button onclick="closeItemModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500">Cancelar</button>
+        <button onclick="saveEvaluationItem()" class="px-5 py-2 rounded-xl text-xs font-bold bg-amber-500 text-white shadow hover:bg-amber-600">Guardar Ítem</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Subir Recurso de Trabajo / Libro Biblioteca -->
+  <div id="modalResource" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-float border border-slate-100">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 id="modalResourceTitle" class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-brand-purple"></i>
+          <span>Añadir Recurso</span>
+        </h3>
+        <button onclick="closeResourceModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 pt-4" id="resourceFormFields">
+        <!-- Rellenado dinámicamente según si es recurso de trabajo o libro de biblioteca -->
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-5 border-t border-slate-100 mt-5">
+        <button onclick="closeResourceModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-500">Cancelar</button>
+        <button onclick="saveResource()" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-purple text-white shadow hover:bg-purple-700">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ayuda y Guía de Uso -->
+  <div id="modalHelp" class="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-float border border-slate-100 max-h-[85vh] overflow-y-auto custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <img src="rtea_logo.jpg" class="w-7 h-7 rounded-lg object-cover">
+          <h3 class="text-base font-extrabold text-slate-800">Guía de R-TEA Pro</h3>
+        </div>
+        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="space-y-3 pt-4 text-xs text-slate-600 leading-relaxed">
+        <p><strong>1. Privacidad y Anonimato:</strong> El aula está limitada a un máximo de 5 alumnos. Para salvaguardar la privacidad frente a terceros, asigna tú mismo apodos o alias manuales.</p>
+        <p><strong>2. Matriz Adaptativa y Medallas:</strong>
+          <br>• <strong>0 a 2:</strong> En proceso (Sin medalla)
+          <br>• <strong>3:</strong> Conseguido parcialmente 🥉 Medalla de Bronce
+          <br>• <strong>4:</strong> Avance notable / Casi consolidado 🥈 Medalla de Plata
+          <br>• <strong>5:</strong> Consolidación total 🥇 Medalla de Oro
+        </p>
+        <p><strong>3. Informes IA y Chat Contextual:</strong> La IA analiza la evolución de la matriz y el diario de sesiones para generar el informe final con gráfico de radar y responder dudas específicas en el chat.</p>
+        <p><strong>4. Dos Pestañas de Recursos:</strong>
+          <br>• <strong>Trabajo por Áreas:</strong> Fichas, pictogramas y materiales clasificables con botón de borrado.
+          <br>• <strong>Biblioteca:</strong> Registro de cuentos y libros con subida de fotos de portada y títulos.</p>
+      </div>
+      <div class="pt-5 border-t border-slate-100 mt-5 text-right">
+        <button onclick="closeHelpModal()" class="px-5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT PRINCIPAL DE LA APLICACIÓN -->
+  <script src="app.js"></script>
+</body>
+</html>
